@@ -1,0 +1,7 @@
+各个其中compileSDKVersion是AS编译APK使用的API Level，一般修改了compileSDKVersion不会改变运行时的行为，可能会出现一些编译的警告和错误， compileSDKVersion并不会被包含到apk中，它只是纯粹在编译时候使用。一般推荐使用最新的版本进行编译，避免使用废弃的API，同时Support Library 也需要相应的编译SDK版本来支持，我们经常使用的Support Library的依赖语句形式如下：compile 'com.android.support:support-v4:24.2.1，其格式是compile jar文件组（group/命名空间）:jar文件名（name）:jar文件版本（version），这里jar文件版本需要和compileSDKVersion保持一致。
+
+关于Support Library参考：http://www.jianshu.com/p/f5f9a4fd22e8
+简单总结一下：Support Library提供了一些低版本API Level中不存在的API接口，如App配置为minSdkVersion=9，targetSdkVersion=23，在程序里使用了android 3.0 (API level 11)提供的ActionBar类，使用compileSdkVersion=23成功编译出apk，App在android 3.0以及以上的版本上正常运行，但在API 9的版本上回crash，因为找不到ActionBar类，因为旧版本上没有新版本里新增的类。为了避免使用了最新功能开发的app只能在最新系统的设备上运行的尴尬，官方把新版系统framework中新增加的接口提出来放到了Android Support Library（支持包）中，开发者在遇到上面的情况时，就可以使用支持包中具有同样功能的ActionBar类，这个支持包会打包进apk里，这样使用了新版本系统上功能的App也可以向后兼容以前的老系统版本设备了。
+
+Support V4和V7是使用最广泛的2个包，其实是包的集合，v4在后期被拆分为几个子包，v7一开始就是不同的子包，这样可以减少apk的体积，另外在编译的时候使用代码混淆ProGuard，除了可以混淆源代码外，还可以移除依赖支持库中没有使用到的类，达到apk瘦身的效果。
+
